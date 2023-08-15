@@ -50,6 +50,17 @@ local hsl = lush.hsl
 ---@diagnostic disable: undefined-global
 local theme = lush(function(injected_functions)
   local sym = injected_functions.sym
+  local dch = hsl(294, 100, 50)
+  local gold = hsl(31, 100, 67)
+  local green = hsl(95, 48, 65)
+  local lightblue = hsl(211, 76, 58)
+  local teal = hsl(174, 57, 34)
+  local offteal = teal.da(40)
+  local bg = hsl(255, 32, 11)
+  local lightgrey = hsl(255, 50, 80)
+  local red = hsl(0, 60, 50)
+  local purple = hsl(285, 40, 40)
+  local importantpurple = purple.li(10).sa(10).ro(10)
   return {
     -- The following are the Neovim (as of 0.8.0-dev+100-g371dfb174) highlight
     -- groups, mostly used for styling UI elements.
@@ -70,9 +81,9 @@ local theme = lush(function(injected_functions)
     -- CursorColumn   { }, -- Screen-column at the cursor, when 'cursorcolumn' is set.
     -- CursorLine     { }, -- Screen-line at the cursor, when 'cursorline' is set. Low-priority if foreground (ctermfg OR guifg) is not set.
     -- Directory      { }, -- Directory names (and other special names in listings)
-    -- DiffAdd        { }, -- Diff mode: Added line |diff.txt|
-    -- DiffChange     { }, -- Diff mode: Changed line |diff.txt|
-    -- DiffDelete     { }, -- Diff mode: Deleted line |diff.txt|
+    DiffAdd { bg = bg, fg = green },     -- Diff mode: Added line |diff.txt|
+    DiffChange { bg = bg, fg = teal },   -- Diff mode: Changed line |diff.txt|
+    DiffDelete { bg = bg, fg = red },    -- Diff mode: Deleted line |diff.txt|
     -- DiffText       { }, -- Diff mode: Changed text within a changed line |diff.txt|
     -- EndOfBuffer    { }, -- Filler lines (~) after the end of the buffer. By default, this is highlighted like |hl-NonText|.
     -- TermCursor     { }, -- Cursor in a focused terminal
@@ -81,13 +92,13 @@ local theme = lush(function(injected_functions)
     -- VertSplit      { }, -- Column separating vertically split windows
     -- Folded         { }, -- Line used for closed folds
     -- FoldColumn     { }, -- 'foldcolumn'
-    -- SignColumn     { }, -- Column where |signs| are displayed
+    SignColumn { bg = bg }, -- Column where |signs| are displayed
     -- IncSearch      { }, -- 'incsearch' highlighting; also used for the text replaced with ":s///c"
     -- Substitute     { }, -- |:substitute| replacement text highlighting
-    -- LineNr         { }, -- Line number for ":number" and ":#" commands, and when 'number' or 'relativenumber' option is set.
-    -- LineNrAbove    { }, -- Line number for when the 'relativenumber' option is set, above the cursor line
+    LineNr { fg = bg.li(30).de(60), gui = "italic" }, -- Line number for ":number" and ":#" commands, and when 'number' or 'relativenumber' option is set.
+    -- LineNrAbove { },                   -- Line number for when the 'relativenumber' option is set, above the cursor line
     -- LineNrBelow    { }, -- Line number for when the 'relativenumber' option is set, below the cursor line
-    -- CursorLineNr   { }, -- Like LineNr when 'cursorline' or 'relativenumber' is set for the cursor line.
+    -- CursorLineNr { }, -- Like LineNr when 'cursorline' or 'relativenumber' is set for the cursor line.
     -- CursorLineFold { }, -- Like FoldColumn when 'cursorline' is set for the cursor line
     -- CursorLineSign { }, -- Like SignColumn when 'cursorline' is set for the cursor line
     -- MatchParen     { }, -- Character under the cursor or just before it, if it is a paired bracket, and its match. |pi_paren.txt|
@@ -96,11 +107,11 @@ local theme = lush(function(injected_functions)
     -- MsgSeparator   { }, -- Separator for scrolled messages, `msgsep` flag of 'display'
     -- MoreMsg        { }, -- |more-prompt|
     -- NonText        { }, -- '@' at the end of the window, characters from 'showbreak' and other characters that do not really exist in the text (e.g., ">" displayed when a double-wide character doesn't fit at the end of the line). See also |hl-EndOfBuffer|.
-    -- Normal         { }, -- Normal text
-    -- NormalFloat    { }, -- Normal text in floating windows.
+    Normal { bg = bg },             -- Normal text
+    NormalFloat { bg = bg.da(10) }, -- Normal text in floating windows.
     -- FloatBorder    { }, -- Border of floating windows.
     -- FloatTitle     { }, -- Title of floating windows.
-    -- NormalNC       { }, -- normal text in non-current windows
+    -- NormalNC {},  -- normal text in non-current windows
     -- Pmenu          { }, -- Popup menu: Normal item.
     -- PmenuSel       { }, -- Popup menu: Selected item.
     -- PmenuKind      { }, -- Popup menu: Normal item "kind"
@@ -140,23 +151,23 @@ local theme = lush(function(injected_functions)
     --
     -- Uncomment and edit if you want more specific syntax highlighting.
 
-    Comment { fg = hsl(290, 30, 30) }, -- Any comment
+    Comment { fg = Normal.bg.li(20).de(40), gui = "italic" }, -- Any comment
 
     -- Constant       { }, -- (*) Any constant
-    -- String         { }, --   A string constant: "this is a string"
+    String { fg = green }, --   A string constant: "this is a string"
     -- Character      { }, --   A character constant: 'c', '\n'
     -- Number         { }, --   A number constant: 234, 0xff
-    -- Boolean        { }, --   A boolean constant: TRUE, false
+    Boolean { fg = importantpurple }, --   A boolean constant: TRUE, false
     -- Float          { }, --   A floating point constant: 2.3e10
 
-    -- Identifier     { }, -- (*) Any variable name
+    Identifier { fg = lightgrey }, -- (*) Any variable name
     -- Function       { }, --   Function name (also: methods for classes)
 
     -- Statement      { }, -- (*) Any statement
-    -- Conditional    { }, --   if, then, else, endif, switch, etc.
+    Conditional { fg = gold }, --   if, then, else, endif, switch, etc.
     -- Repeat         { }, --   for, do, while, etc.
     -- Label          { }, --   case, default, etc.
-    -- Operator       { }, --   "sizeof", "+", "*", etc.
+    Operator { fg = gold.da(40).de(60) }, --   "sizeof", "+", "*", etc.
     -- Keyword        { }, --   any other keyword
     -- Exception      { }, --   try, catch, throw
 
@@ -166,10 +177,10 @@ local theme = lush(function(injected_functions)
     -- Macro          { }, --   Same as Define
     -- PreCondit      { }, --   Preprocessor #if, #else, #endif, etc.
 
-    -- Type           { }, -- (*) int, long, char, etc.
+    Type { fg = teal },           -- (*) int, long, char, etc.
     -- StorageClass   { }, --   static, register, volatile, etc.
-    -- Structure      { }, --   struct, union, enum, etc.
-    -- Typedef        { }, --   A typedef
+    Structure { fg = lightgrey }, --   struct, union, enum, etc.
+    -- Typedef {},   --   A typedef
 
     -- Special        { }, -- (*) Any special symbol
     -- SpecialChar    { }, --   Special character in a constant
@@ -248,9 +259,9 @@ local theme = lush(function(injected_functions)
     -- sym"@text.underline"    { }, -- Underlined
     -- sym"@text.todo"         { }, -- Todo
     -- sym"@comment"           { }, -- Comment
-    -- sym"@punctuation"       { }, -- Delimiter
+    sym "@punctuation" { fg = Operator.fg.li(20) },   -- Delimiter
     -- sym"@constant"          { }, -- Constant
-    -- sym"@constant.builtin"  { }, -- Special
+    sym "@constant.builtin" { fg = importantpurple }, -- Special
     -- sym"@constant.macro"    { }, -- Define
     -- sym"@define"            { }, -- Define
     -- sym"@macro"             { }, -- Macro
@@ -274,18 +285,31 @@ local theme = lush(function(injected_functions)
     -- sym"@repeat"            { }, -- Repeat
     -- sym"@label"             { }, -- Label
     -- sym"@operator"          { }, -- Operator
-    -- sym"@keyword"           { }, -- Keyword
+    sym "@keyword" { fg = gold }, -- Keyword
     -- sym"@exception"         { }, -- Exception
-    -- sym"@variable"          { }, -- Identifier
-    -- sym"@type"              { }, -- Type
+    -- sym "@variable" { }, -- Identifier
+    sym "@type" { fg = lightgrey }, -- Type (import {THISISTHETARGET} from '../')
     -- sym"@type.definition"   { }, -- Typedef
     -- sym"@storageclass"      { }, -- StorageClass
     -- sym"@structure"         { }, -- Structure
     -- sym"@namespace"         { }, -- Identifier
-    -- sym"@include"           { }, -- Include
+    sym "@include" { fg = gold }, -- Include
     -- sym"@preproc"           { }, -- PreProc
     -- sym"@debug"             { }, -- Debug
-    -- sym"@tag"               { }, -- Tag
+    sym "@tag" { fg = teal },                                                        -- Tag
+    -- DCH - my ones below
+    sym "@type.builtin" { fg = offteal.ro(20).li(20).de(10) },                       -- const type: number <-- targets "number"
+    sym "@variable.builtin" { fg = importantpurple },                                -- const type: number <-- targets "number"
+    sym "@DCHVarDeclarations" { fg = purple },                                       -- let, const, var
+    sym "@DCHTypeQueryID" { fg = teal },                                             -- typeof THISTHINGHERE
+    sym "@DCHJSDocKeyword" { fg = Comment.fg.mix(gold, 45).de(70).da(20) },          -- @default false <-- targets "default"
+    sym "@DCHJSDocKeywordDescription" { fg = Comment.fg.mix(lightgrey, 40).da(20) }, -- @default false <-- targets "false"
+    sym "@DCHLiteralType" { fg = offteal.ro(20) },                                   -- undefined, null inside a type union
+    sym "@DCHWordType" { fg = purple },                                              -- type NotImportant = {} <--- the word type here
+    sym "@DCHSvelteReactive" { fg = gold },                                          -- type NotImportant = {} <--- the word type here
+    sym "@DCHOperator" { fg = Operator.fg },                                         -- type NotImportant = {} <--- the word type here
+    sym "@tag.delimiter" { fg = Operator.fg },                                       -- type NotImportant = {} <--- the word type here
+
   }
 end)
 
