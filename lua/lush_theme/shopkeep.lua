@@ -52,6 +52,7 @@ local theme = lush(function(injected_functions)
   local sym = injected_functions.sym
   local dch = hsl(294, 100, 50)
   local gold = hsl(31, 100, 67)
+  local yellow = hsl(15, 40, 67)
   local green = hsl(95, 48, 65)
   local lightblue = hsl(211, 76, 58)
   local teal = hsl(174, 57, 34)
@@ -61,6 +62,8 @@ local theme = lush(function(injected_functions)
   local red = hsl(0, 60, 50)
   local purple = hsl(285, 40, 40)
   local importantpurple = purple.li(10).sa(10).ro(10)
+  local offpurple = purple.sa(0).ro(-40).li(20)
+
   return {
     -- The following are the Neovim (as of 0.8.0-dev+100-g371dfb174) highlight
     -- groups, mostly used for styling UI elements.
@@ -80,16 +83,16 @@ local theme = lush(function(injected_functions)
     -- CursorIM       { }, -- Like Cursor, but used when in IME mode |CursorIM|
     -- CursorColumn   { }, -- Screen-column at the cursor, when 'cursorcolumn' is set.
     -- CursorLine     { }, -- Screen-line at the cursor, when 'cursorline' is set. Low-priority if foreground (ctermfg OR guifg) is not set.
-    -- Directory      { }, -- Directory names (and other special names in listings)
-    DiffAdd { bg = bg, fg = green },     -- Diff mode: Added line |diff.txt|
-    DiffChange { bg = bg, fg = teal },   -- Diff mode: Changed line |diff.txt|
-    DiffDelete { bg = bg, fg = red },    -- Diff mode: Deleted line |diff.txt|
+    Directory { fg = offpurple },      -- Directory names (and other special names in listings)
+    DiffAdd { bg = bg, fg = green },   -- Diff mode: Added line |diff.txt|
+    DiffChange { bg = bg, fg = teal }, -- Diff mode: Changed line |diff.txt|
+    DiffDelete { bg = bg, fg = red },  -- Diff mode: Deleted line |diff.txt|
     -- DiffText       { }, -- Diff mode: Changed text within a changed line |diff.txt|
-    -- EndOfBuffer    { }, -- Filler lines (~) after the end of the buffer. By default, this is highlighted like |hl-NonText|.
+    EndOfBuffer { fg = Normal.bg },    -- Filler lines (~) after the end of the buffer. By default, this is highlighted like |hl-NonText|.
     -- TermCursor     { }, -- Cursor in a focused terminal
     -- TermCursorNC   { }, -- Cursor in an unfocused terminal
     -- ErrorMsg       { }, -- Error messages on the command line
-    -- VertSplit      { }, -- Column separating vertically split windows
+    VertSplit { bg = bg.da(30), fg = bg.da(20).li(10).de(10) }, -- Column separating vertically split windows
     -- Folded         { }, -- Line used for closed folds
     -- FoldColumn     { }, -- 'foldcolumn'
     SignColumn { bg = bg }, -- Column where |signs| are displayed
@@ -106,7 +109,7 @@ local theme = lush(function(injected_functions)
     -- MsgArea        { }, -- Area for messages and cmdline
     -- MsgSeparator   { }, -- Separator for scrolled messages, `msgsep` flag of 'display'
     -- MoreMsg        { }, -- |more-prompt|
-    -- NonText        { }, -- '@' at the end of the window, characters from 'showbreak' and other characters that do not really exist in the text (e.g., ">" displayed when a double-wide character doesn't fit at the end of the line). See also |hl-EndOfBuffer|.
+    NonText { fg = bg },            -- '@' at the end of the window, characters from 'showbreak' and other characters that do not really exist in the text (e.g., ">" displayed when a double-wide character doesn't fit at the end of the line). See also |hl-EndOfBuffer|.
     Normal { bg = bg },             -- Normal text
     NormalFloat { bg = bg.da(10) }, -- Normal text in floating windows.
     -- FloatBorder    { }, -- Border of floating windows.
@@ -137,7 +140,7 @@ local theme = lush(function(injected_functions)
     -- Visual         { }, -- Visual mode selection
     -- VisualNOS      { }, -- Visual mode selection when vim is "Not Owning the Selection".
     -- WarningMsg     { }, -- Warning messages
-    -- Whitespace     { }, -- "nbsp", "space", "tab" and "trail" in 'listchars'
+    Whitespace { fg = Normal.bg.li(5).de(20) }, -- "nbsp", "space", "tab" and "trail" in 'listchars'
     -- Winseparator   { }, -- Separator between window splits. Inherts from |hl-VertSplit| by default, which it will replace eventually.
     -- WildMenu       { }, -- Current match in 'wildmenu' completion
     -- WinBar         { }, -- Window bar of current window
@@ -209,8 +212,8 @@ local theme = lush(function(injected_functions)
 
     -- See :h diagnostic-highlights, some groups may not be listed, submit a PR fix to lush-template!
     --
-    -- DiagnosticError            { } , -- Used as the base highlight group. Other Diagnostic highlights link to this by default (except Underline)
-    -- DiagnosticWarn             { } , -- Used as the base highlight group. Other Diagnostic highlights link to this by default (except Underline)
+    DiagnosticError { fg = red.de(30) }, -- Used as the base highlight group. Other Diagnostic highlights link to this by default (except Underline)
+    DiagnosticWarn { fg = yellow },      -- Used as the base highlight group. Other Diagnostic highlights link to this by default (except Underline)
     -- DiagnosticInfo             { } , -- Used as the base highlight group. Other Diagnostic highlights link to this by default (except Underline)
     -- DiagnosticHint             { } , -- Used as the base highlight group. Other Diagnostic highlights link to this by default (except Underline)
     -- DiagnosticOk               { } , -- Used as the base highlight group. Other Diagnostic highlights link to this by default (except Underline)
@@ -270,7 +273,7 @@ local theme = lush(function(injected_functions)
     -- sym"@string.special"    { }, -- SpecialChar
     -- sym"@character"         { }, -- Character
     -- sym"@character.special" { }, -- SpecialChar
-    -- sym"@number"            { }, -- Number
+    sym "@number" { fg = hsl(321, 37, 44) }, -- Number
     -- sym"@boolean"           { }, -- Boolean
     -- sym"@float"             { }, -- Float
     -- sym"@function"          { }, -- Function
@@ -296,23 +299,41 @@ local theme = lush(function(injected_functions)
     sym "@include" { fg = gold }, -- Include
     -- sym"@preproc"           { }, -- PreProc
     -- sym"@debug"             { }, -- Debug
-    sym "@tag" { fg = teal },                                                        -- Tag
+    sym "@tag" { fg = teal },                                                        -- HTML/script/style tag
     -- DCH - my ones below
     sym "@type.builtin" { fg = offteal.ro(20).li(20).de(10) },                       -- const type: number <-- targets "number"
     sym "@variable.builtin" { fg = importantpurple },                                -- const type: number <-- targets "number"
+    sym "@variable.builtin.tsx" { fg = lightgrey },                                  -- const type: number <-- targets "number"
     sym "@DCHVarDeclarations" { fg = purple },                                       -- let, const, var
     sym "@DCHTypeQueryID" { fg = teal },                                             -- typeof THISTHINGHERE
-    sym "@DCHJSDocKeyword" { fg = Comment.fg.mix(gold, 45).de(70).da(20) },          -- @default false <-- targets "default"
+    sym "@keyword.jsdoc" { fg = Comment.fg.mix(gold, 45).de(70).da(20) },            -- @default false <-- targets "default"
     sym "@DCHJSDocKeywordDescription" { fg = Comment.fg.mix(lightgrey, 40).da(20) }, -- @default false <-- targets "false"
     sym "@DCHLiteralType" { fg = offteal.ro(20) },                                   -- undefined, null inside a type union
     sym "@DCHWordType" { fg = purple },                                              -- type NotImportant = {} <--- the word type here
-    sym "@DCHSvelteReactive" { fg = gold },                                          -- type NotImportant = {} <--- the word type here
-    sym "@DCHOperator" { fg = Operator.fg },                                         -- type NotImportant = {} <--- the word type here
+    sym "@DCHSvelteReactive" { fg = gold },                                          -- $ in Svelte
+    sym "@DCHOperator" { fg = Operator.fg },                                         --
+    sym "@DCHJsxText" { fg = lightgrey },                                            -- <span>This text right here</span
     sym "@tag.delimiter" { fg = Operator.fg },                                       -- type NotImportant = {} <--- the word type here
-
+    sym "@tag.attribute" { fg = gold },                                              -- onClick={}
+    sym "@lsp.typemod.function.local" { fg = lightgrey },                            -- thisFunction()
+    sym "@lsp.typemod.function.declaration" { fg = lightgrey },                      -- thisFunction()
+    sym "@lsp.typemod.function.readonly" { fg = purple },                            -- thisFunction()
+    sym "@method.call" { fg = offpurple },                                           -- thisFunction()
+    sym "@lsp.type.function.typescriptreact" { fg = offpurple },                     -- thisFunction()
+    sym "@lsp.type.function.typescript" { fg = offpurple },                          -- thisFunction()
+    sym "@lsp.typemod.property.declaration.typescript" { fg = lightgrey },
+    NeoTreeRootName { fg = offpurple.li(33).sa(30) },
+    NeoTreeGitModified { fg = offpurple.li(53).sa(30) },
+    NeoTreeGitUntracked { fg = offpurple.li(53).sa(30) },
+    NeoTreeGitUnstaged { fg = gold },
+    NeoTreeFileName { fg = importantpurple.li(53).sa(30) },
+    NeoTreeNormal { bg = Normal.bg.da(30) },
+    NeoTreeNormalNC { bg = Normal.bg.da(30) },
+    NeoTreeEndOfBuffer { fg = NeoTreeNormalNC.bg },
+    NeoTreeCursorLine { bg = NeoTreeNormal.bg.li(10) },
+    IlluminatedWordText { fg = Normal.fg }
   }
 end)
-
 -- Return our parsed theme for extension or use elsewhere.
 return theme
 
