@@ -6,21 +6,22 @@ local theme = lush(function(injected_functions)
   -- Not actually used, just a bright pink for diagnostic testing
   local devdiagnostic = hsl(294, 100, 50)
 
+  local purple = hsl(285, 40, 40)
+  local lightgrey = hsl(255, 50, 80)
   local gold = hsl(31, 100, 67)
   local yellow = hsl(15, 40, 67)
   local green = hsl(95, 48, 65)
   local teal = hsl(174, 57, 34)
-  local offteal = teal.da(40)
-  local bg = hsl(255, 32, 11)
-  local lightgrey = hsl(255, 50, 80)
   local red = hsl(0, 60, 50)
-  local purple = hsl(285, 40, 40)
+  local bg = hsl(255, 32, 11)
   local importantpurple = purple.li(10).sa(10).ro(10)
+  local offgold = lightgrey.mix(gold, 45).de(70).da(20)
+  local offteal = teal.da(40)
   local offpurple = purple.sa(0).ro(-40).li(20)
 
   return {
     -- ColorColumn    { }, -- Columns set with 'colorcolumn'
-    -- Conceal        { }, -- Placeholder characters substituted for concealed text (see 'conceallevel')
+    Conceal { bg = offgold, fg = offteal }, -- Placeholder characters substituted for concealed text (see 'conceallevel')
     -- Cursor         { }, -- Character under the cursor
     -- CurSearch      { }, -- Highlighting a search pattern under the cursor (see 'hlsearch')
     -- lCursor        { }, -- Character under the cursor when |language-mapping| is used (see 'guicursor')
@@ -35,7 +36,7 @@ local theme = lush(function(injected_functions)
     EndOfBuffer { fg = Normal.bg },    -- Filler lines (~) after the end of the buffer. By default, this is highlighted like |hl-NonText|.
     -- TermCursor     { }, -- Cursor in a focused terminal
     -- TermCursorNC   { }, -- Cursor in an unfocused terminal
-    -- ErrorMsg       { }, -- Error messages on the command line
+    ErrorMsg { bg = Normal.bg, fg = red.de(30) },               -- Error messages on the command line
     VertSplit { bg = bg.da(30), fg = bg.da(20).li(10).de(10) }, -- Column separating vertically split windows
     -- Folded         { }, -- Line used for closed folds
     -- FoldColumn     { }, -- 'foldcolumn'
@@ -48,18 +49,18 @@ local theme = lush(function(injected_functions)
     -- CursorLineNr { }, -- Like LineNr when 'cursorline' or 'relativenumber' is set for the cursor line.
     -- CursorLineFold { }, -- Like FoldColumn when 'cursorline' is set for the cursor line
     -- CursorLineSign { }, -- Like SignColumn when 'cursorline' is set for the cursor line
-    -- MatchParen     { }, -- Character under the cursor or just before it, if it is a paired bracket, and its match. |pi_paren.txt|
+    MatchParen { bg = bg.li(20).ro(20) }, -- Character under the cursor or just before it, if it is a paired bracket, and its match. |pi_paren.txt|
     -- ModeMsg        { }, -- 'showmode' message (e.g., "-- INSERT -- ")
     -- MsgArea        { }, -- Area for messages and cmdline
     -- MsgSeparator   { }, -- Separator for scrolled messages, `msgsep` flag of 'display'
     -- MoreMsg        { }, -- |more-prompt|
-    NonText { fg = bg },            -- '@' at the end of the window, characters from 'showbreak' and other characters that do not really exist in the text (e.g., ">" displayed when a double-wide character doesn't fit at the end of the line). See also |hl-EndOfBuffer|.
+    NonText { fg = bg, bg = bg },   -- '@' at the end of the window, characters from 'showbreak' and other characters that do not really exist in the text (e.g., ">" displayed when a double-wide character doesn't fit at the end of the line). See also |hl-EndOfBuffer|.
     Normal { bg = bg },             -- Normal text
     NormalFloat { bg = bg.da(10) }, -- Normal text in floating windows.
     -- FloatBorder    { }, -- Border of floating windows.
     -- FloatTitle     { }, -- Title of floating windows.
     -- NormalNC {},  -- normal text in non-current windows
-    -- Pmenu          { }, -- Popup menu: Normal item.
+    Pmenu { bg = bg }, -- Popup menu: Normal item.
     -- PmenuSel       { }, -- Popup menu: Selected item.
     -- PmenuKind      { }, -- Popup menu: Normal item "kind"
     -- PmenuKindSel   { }, -- Popup menu: Selected item "kind"
@@ -67,9 +68,9 @@ local theme = lush(function(injected_functions)
     -- PmenuExtraSel  { }, -- Popup menu: Selected item "extra text"
     -- PmenuSbar      { }, -- Popup menu: Scrollbar.
     -- PmenuThumb     { }, -- Popup menu: Thumb of the scrollbar.
-    -- Question       { }, -- |hit-enter| prompt and yes/no questions
-    -- QuickFixLine   { }, -- Current |quickfix| item in the quickfix window. Combined with |hl-CursorLine| when the cursor is there.
-    -- Search         { }, -- Last search pattern highlighting (see 'hlsearch'). Also used for similar items that need to stand out.
+    Question { fg = gold.da(30).de(30) },     -- |hit-enter| prompt and yes/no questions
+    QuickFixLine { bg = Normal.bg.da(20) },   -- Current |quickfix| item in the quickfix window. Combined with |hl-CursorLine| when the cursor is there.
+    Search { bg = Normal.bg.li(10).ro(-30) }, -- Last search pattern highlighting (see 'hlsearch'). Also used for similar items that need to stand out.
     -- SpecialKey     { }, -- Unprintable characters: text displayed differently from what it really is. But not 'listchars' whitespace. |hl-Whitespace|
     -- SpellBad       { }, -- Word that is not recognized by the spellchecker. |spell| Combined with the highlighting used otherwise.
     -- SpellCap       { }, -- Word that should start with a capital. |spell| Combined with the highlighting used otherwise.
@@ -80,13 +81,13 @@ local theme = lush(function(injected_functions)
     -- TabLine {},        -- Tab pages line, not active tab page label
     -- TabLineFill    { }, -- Tab pages line, where there are no labels
     -- TabLineSel     { }, -- Tab pages line, active tab page label
-    -- Title          { }, -- Titles for output from ":set all", ":autocmd" etc.
+    Title { Normal.fg }, -- Titles for output from ":set all", ":autocmd" etc.
     -- Visual         { }, -- Visual mode selection
     -- VisualNOS      { }, -- Visual mode selection when vim is "Not Owning the Selection".
     -- WarningMsg     { }, -- Warning messages
     Whitespace { fg = Normal.bg.li(5).de(20) }, -- "nbsp", "space", "tab" and "trail" in 'listchars'
     -- Winseparator   { }, -- Separator between window splits. Inherts from |hl-VertSplit| by default, which it will replace eventually.
-    -- WildMenu       { }, -- Current match in 'wildmenu' completion
+    WildMenu { bg = Normal.bg.da(30) },         -- Current match in 'wildmenu' completion
     -- WinBar         { }, -- Window bar of current window
     -- WinBarNC       { }, -- Window bar of not-current windows
 
@@ -121,7 +122,7 @@ local theme = lush(function(injected_functions)
     Structure { fg = lightgrey }, --   struct, union, enum, etc.
     -- Typedef {},   --   A typedef
 
-    -- Special        { }, -- (*) Any special symbol
+    --Special { fg = devdiagnostic },        -- (*) Any special symbol
     -- SpecialChar    { }, --   Special character in a constant
     -- Tag            { }, --   You can use CTRL-] on this
     -- Delimiter      { }, --   Character that needs attention
@@ -130,7 +131,7 @@ local theme = lush(function(injected_functions)
 
     -- Underlined     { gui = "underline" }, -- Text that stands out, HTML links
     -- Ignore         { }, -- Left blank, hidden |hl-Ignore| (NOTE: May be invisible here in template)
-    -- Error          { }, -- Any erroneous construct
+    Error { fg = red.de(30), bg = Normal.bg }, -- Any erroneous construct
     -- Todo           { }, -- Anything that needs extra attention; mostly the keywords TODO FIXME and XXX
 
     -- [lsp (these were default with lush)]
@@ -152,8 +153,8 @@ local theme = lush(function(injected_functions)
     -- DiagnosticVirtualTextInfo  { } , -- Used for "Info" diagnostic virtual text.
     -- DiagnosticVirtualTextHint  { } , -- Used for "Hint" diagnostic virtual text.
     -- DiagnosticVirtualTextOk    { } , -- Used for "Ok" diagnostic virtual text.
-    -- DiagnosticUnderlineError   { } , -- Used to underline "Error" diagnostics.
-    -- DiagnosticUnderlineWarn    { } , -- Used to underline "Warn" diagnostics.
+    -- DiagnosticUnderlineError { fg = red }, -- Used to underline "Error" diagnostics.
+    -- DiagnosticUnderlineWarn { fg = yellow.da(30) }, -- Used to underline "Warn" diagnostics.
     -- DiagnosticUnderlineInfo    { } , -- Used to underline "Info" diagnostics.
     -- DiagnosticUnderlineHint    { } , -- Used to underline "Hint" diagnostics.
     -- DiagnosticUnderlineOk      { } , -- Used to underline "Ok" diagnostics.
@@ -201,8 +202,8 @@ local theme = lush(function(injected_functions)
     -- sym"@conditional"       { }, -- Conditional
     -- sym"@repeat"            { }, -- Repeat
     -- sym"@label"             { }, -- Label
-    -- sym"@operator"          { }, -- Operator
-    sym "@keyword" { fg = gold }, -- Keyword
+    sym "@operator" { fg = offgold }, -- Operator
+    sym "@keyword" { fg = gold },     -- Keyword
     -- sym"@exception"         { }, -- Exception
     -- sym "@variable" { }, -- Identifier
     sym "@type" { fg = lightgrey }, -- Type (import {THISISTHETARGET} from '../')
@@ -216,40 +217,61 @@ local theme = lush(function(injected_functions)
     sym "@tag" { fg = teal }, -- HTML/script/style tag
 
     -- [DCH - my ones below]
+    -- const keyword
+    javaScriptReserved { fg = gold },
+    -- function keyword
+    javaScriptFunction { fg = gold },
+    javascriptParens { fg = gold },
+    javascriptEquals { fg = gold },
+    -- const functionName = (bar) => {} <--- targets bar
+    sym "@lsp.typemod.parameter.declaration.javascript" { fg = offgold },
+    -- JSON Error
+    --sym '@error.json' { fg = gold },
     -- const type: number <-- targets "number"
-    sym "@type.builtin" { fg = offteal.ro(20).li(20).de(10) },
+    --sym "@type.builtin" { fg = offteal.ro(20).li(20).de(10) },
     -- const type: number <-- targets "number"
-    sym "@variable.builtin" { fg = importantpurple },
+    --sym "@variable.builtin" { fg = importantpurple },
     -- const type: number <-- targets "number"
-    sym "@variable.builtin.tsx" { fg = lightgrey },
+    --sym "@variable.builtin.tsx" { fg = lightgrey },
     -- let, const, var
-    sym "@DCHVarDeclarations" { fg = purple },
+    --sym "@DCHVarDeclarations" { fg = purple },
     -- typeof THISTHINGHERE
-    sym "@DCHTypeQueryID" { fg = teal },
+    --sym "@DCHTypeQueryID" { fg = teal },
     -- @default false <-- targets "default"
-    sym "@keyword.jsdoc" { fg = Comment.fg.mix(gold, 45).de(70).da(20) },
+    --sym "@keyword.jsdoc" { fg = Comment.fg.mix(gold, 45).de(70).da(20) },
     -- @default false <-- targets "false"
-    sym "@DCHJSDocKeywordDescription" { fg = Comment.fg.mix(lightgrey, 40).da(20) },
+    --sym "@DCHJSDocKeywordDescription" { fg = Comment.fg.mix(lightgrey, 40).da(20) },
     -- undefined, null inside a type union
-    sym "@DCHLiteralType" { fg = offteal.ro(20) },
+    --sym "@DCHLiteralType" { fg = offteal.ro(20) },
     -- type NotImportant = {} <--- the word type here
-    sym "@DCHWordType" { fg = purple },
+    --sym "@DCHWordType" { fg = purple },
     -- $ in Svelte
-    sym "@DCHSvelteReactive" { fg = gold },
+    --sym "@DCHSvelteReactive" { fg = gold },
     -- : in Svelte (after the $)
-    sym "@DCHOperator" { fg = Operator.fg },
+    --sym "@DCHOperator" { fg = Operator.fg },
     -- <span>This text right here</span
-    sym "@DCHJsxText" { fg = lightgrey },
+    --sym "@DCHJsxText" { fg = lightgrey },
     -- type NotImportant = {} <--- the word type here
-    sym "@tag.delimiter" { fg = Operator.fg },
+    --sym "@tag.delimiter" { fg = Operator.fg },
     -- onClick={}
-    sym "@tag.attribute" { fg = gold },
-    sym "@lsp.typemod.function.local" { fg = lightgrey },
-    sym "@lsp.typemod.function.readonly" { fg = purple },
-    sym "@method.call" { fg = offpurple },
-    sym "@lsp.type.function.typescriptreact" { fg = offpurple },
-    sym "@lsp.type.function.typescript" { fg = offpurple },
-    sym "@lsp.typemod.property.declaration.typescript" { fg = lightgrey },
+    --sym "@tag.attribute" { fg = gold },
+    --sym "@lsp.typemod.function.local" { fg = lightgrey },
+    --sym "@lsp.typemod.function.readonly" { fg = purple },
+    --sym "@method.call" { fg = offteal },
+    -- require(packageName) <-- targets require
+    --sym "@lsp.type.function" { fg = offteal },
+    --sym "@lsp.type.function.typescriptreact" { fg = offpurple },
+    --sym "@lsp.type.function.typescript" { fg = offpurple },
+    --sym "@lsp.typemod.property.declaration.typescript" { fg = lightgrey },
+    -- const functionName = () => {} <---targets functionName
+    --sym "@lsp.typemod.function" { fg = lightgrey },
+    -- module.exports <--- targets module
+    --sym "@variable.builtin.javascript" { fg = lightgrey },
+    -- try, catch, throw
+    --sym "@exception.javascript" { fg = offpurple },
+    -- path.join <-- path
+    --sym "@lsp.type.namespace.javascript" { fg = offpurple },
+
 
     -- [NeoTree]
     NeoTreeRootName { fg = offpurple.li(33).sa(30) },
@@ -262,6 +284,39 @@ local theme = lush(function(injected_functions)
     NeoTreeEndOfBuffer { fg = NeoTreeNormalNC.bg },
     NeoTreeCursorLine { bg = NeoTreeNormal.bg.li(10) },
 
+    -- [Lazy]
+    LazyButton { bg = Normal.bg },
+    LazyButtonActive { bg = Normal.bg.li(10) },
+
+    -- [Lualine]
+    lualine_c_normal { fg = gold, guibg = Normal.bg },
+
+    -- #!/usr/bin/env node <--whole line
+    sym "@preproc.javascript" { fg = Normal.bg.li(20) },
+    -- require("path")
+    sym "@lsp.type.function.javascript" { fg = offpurple },
+    -- try, catch, throw
+    sym "@exception.javascript" { fg = purple },
+    -- if, else, switch
+    sym "@conditional.javascript" { fg = purple },
+    -- for, while
+    sym "@repeat.javascript" { fg = purple },
+    -- console.log <-- console
+    sym "@lsp.typemod.variable.defaultLibrary.javascript" { fg = offgold },
+    -- console.log <-- log
+    sym "@lsp.typemod.member.defaultLibrary.javascript" { fg = offpurple },
+    -- foo.bar() <-- bar
+    sym "@method.call.javascript" { fg = offpurple },
+    -- foo.bar() <-- foo
+    sym "@function.builtin.javascript" { link = "Special" },
+    -- throw new Error() <-- Error
+    sym "@lsp.typemod.class.defaultLibrary.javascript" { fg = offpurple },
+    -- using a parameter inside a function
+    --sym "@lsp.type.parameter.javascript" { fg = offteal },
+    -- foo: () => {} <----foo
+    sym "@lsp.typemod.member.declaration.javascript" { fg = offgold },
+    -- const bar = { zaz: 'asfd'} <---zaz
+    sym "@lsp.typemod.property.declaration.javascript" { fg = offgold },
   }
 end)
 
